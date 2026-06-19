@@ -25,7 +25,7 @@ export default function Home() {
         const timer = setTimeout(() => {
           setShowSplash(false);
           sessionStorage.setItem("elektronica_splash_shown", "true");
-        }, 3600); // 3.6s play duration
+        }, 1400); // 1.4s play duration
         return () => clearTimeout(timer);
       }
     }
@@ -34,10 +34,10 @@ export default function Home() {
   // Update diagnostics telemetry text as boot progress progresses
   useEffect(() => {
     if (!showSplash) return;
-    const timer1 = setTimeout(() => setDiagnostics("CONNECTING SENSOR TELEMETRY..."), 700);
-    const timer2 = setTimeout(() => setDiagnostics("LOADING EMBEDDED SCRIPTS..."), 1400);
-    const timer3 = setTimeout(() => setDiagnostics("LOADING DYNAMIC PCB LINES..."), 2100);
-    const timer4 = setTimeout(() => setDiagnostics("SYSTEM CORE: ONLINE"), 2900);
+    const timer1 = setTimeout(() => setDiagnostics("CONNECTING SENSOR TELEMETRY..."), 300);
+    const timer2 = setTimeout(() => setDiagnostics("LOADING EMBEDDED SCRIPTS..."), 600);
+    const timer3 = setTimeout(() => setDiagnostics("LOADING DYNAMIC PCB LINES..."), 900);
+    const timer4 = setTimeout(() => setDiagnostics("SYSTEM CORE: ONLINE"), 1200);
     return () => {
       clearTimeout(timer1);
       clearTimeout(timer2);
@@ -199,7 +199,7 @@ export default function Home() {
                     className="h-full bg-primary-accent shadow-[0_0_15px_#D7FF00]"
                     initial={{ width: "0%" }}
                     animate={{ width: "100%" }}
-                    transition={{ duration: 2.5, ease: [0.4, 0, 0.2, 1], delay: 0.6 }}
+                    transition={{ duration: 1.0, ease: [0.4, 0, 0.2, 1], delay: 0.2 }}
                   />
                 </div>
                 <div className="flex justify-between items-center text-[8px] font-mono text-[#888]">
@@ -209,7 +209,7 @@ export default function Home() {
                   <motion.span
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 3.1 }}
+                    transition={{ delay: 1.3 }}
                     className="text-primary-accent font-bold"
                   >
                     READY
