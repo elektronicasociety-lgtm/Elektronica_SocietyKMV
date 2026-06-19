@@ -876,6 +876,7 @@ Mascot Status: Online
                     <table className="w-full text-xs font-mono text-text-secondary">
                       <thead>
                         <tr className="border-b border-card-border text-text-primary">
+                          <th className="py-2.5 text-left w-12">PHOTO</th>
                           <th className="py-2.5 text-left">ALUMNUS NAME</th>
                           <th className="py-2.5 text-left">BATCH</th>
                           <th className="py-2.5 text-left">COMPANY</th>
@@ -885,7 +886,16 @@ Mascot Status: Online
                       </thead>
                       <tbody>
                         {alumni.map((al) => (
-                          <tr key={al.id} className="border-b border-card-border hover:bg-card-bg">
+                          <tr key={al.id} className="border-b border-card-border hover:bg-card-bg items-center">
+                            <td className="py-2">
+                              <div className="w-8 h-8 rounded-lg overflow-hidden border border-card-border bg-card-bg">
+                                <img
+                                  src={al.photoUrl || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=100"}
+                                  alt={al.name}
+                                  className="w-full h-full object-cover"
+                                />
+                              </div>
+                            </td>
                             <td className="py-3 font-bold text-text-primary">{al.name}</td>
                             <td className="py-3">{al.passingBatch}</td>
                             <td className="py-3 truncate max-w-[150px]">{al.currentCompany}</td>
@@ -1439,6 +1449,128 @@ Mascot Status: Online
                           onChange={(e) => setEditingItem({ ...editingItem, currentRole: e.target.value })}
                           className="w-full px-3 py-2 bg-card-bg border border-card-border rounded-lg text-xs text-text-primary focus:outline-none"
                         />
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-mono uppercase text-text-secondary block">Profile Photo (File Upload or URL)</label>
+                      <div className="flex items-center space-x-4">
+                        {editingItem.photoUrl ? (
+                          <div className="w-12 h-12 rounded-lg overflow-hidden border border-card-border bg-card-bg shrink-0 relative group">
+                            <img src={editingItem.photoUrl} alt="Preview" className="w-full h-full object-cover" />
+                            <button
+                              suppressHydrationWarning
+                              type="button"
+                              onClick={() => setEditingItem({ ...editingItem, photoUrl: "" })}
+                              className="absolute inset-0 bg-black/75 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-rose-400 text-[8px] font-mono uppercase font-bold"
+                            >
+                              Clear
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="w-12 h-12 rounded-lg border border-dashed border-card-border bg-card-bg flex items-center justify-center text-text-secondary text-[8px] shrink-0 font-mono text-center">
+                            No image
+                          </div>
+                        )}
+                        <div className="flex-grow space-y-1.5 text-left">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (!file) return;
+                              if (file.size > 2 * 1024 * 1024) {
+                                alert("Image size exceeds 2MB limit. Please choose a smaller file.");
+                                return;
+                              }
+                              const reader = new FileReader();
+                              reader.onloadend = () => {
+                                if (typeof reader.result === "string") {
+                                  setEditingItem({ ...editingItem, photoUrl: reader.result });
+                                }
+                              };
+                              reader.readAsDataURL(file);
+                            }}
+                            className="hidden"
+                            id="admin-alumni-photo-upload"
+                          />
+                          <label
+                            htmlFor="admin-alumni-photo-upload"
+                            className="inline-flex items-center px-2.5 py-1.5 bg-card-bg border border-card-border rounded-lg text-[10px] text-text-primary hover:bg-card-bg-hover cursor-pointer transition-colors font-mono"
+                          >
+                            Choose Image File
+                          </label>
+                          <span className="text-[8px] text-text-secondary font-mono ml-2">Max 2MB</span>
+                        </div>
+                      </div>
+                      <input
+                        type="text"
+                        value={editingItem.photoUrl || ""}
+                        onChange={(e) => setEditingItem({ ...editingItem, photoUrl: e.target.value })}
+                        placeholder="Or paste direct image URL / Google Drive link"
+                        className="w-full px-3 py-2 bg-card-bg border border-card-border rounded-lg text-xs text-text-primary placeholder-text-secondary/40 focus:outline-none focus:border-primary-accent"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-mono uppercase text-text-secondary">Positions Held in Society (Comma separated) *</label>
+                      <input
+                        type="text"
+                        required
+                        value={Array.isArray(editingItem.positionsHeld) ? editingItem.positionsHeld.join(", ") : editingItem.positionsHeld || ""}
+                        onChange={(e) => setEditingItem({ ...editingItem, positionsHeld: e.target.value.split(",").map(p => p.trim()) })}
+                        placeholder="e.g. President (2024-25), Core Member (2023-24)"
+                        className="w-full px-3 py-2 bg-card-bg border border-card-border rounded-lg text-xs text-text-primary focus:outline-none"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-mono uppercase text-text-secondary">LinkedIn Profile URL *</label>
+                        <input
+                          type="url"
+                          required
+                          value={editingItem.linkedIn || ""}
+                          onChange={(e) => setEditingItem({ ...editingItem, linkedIn: e.target.value })}
+                          placeholder="https://linkedin.com/in/username"
+                          className="w-full px-3 py-2 bg-card-bg border border-card-border rounded-lg text-xs text-text-primary focus:outline-none"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-mono uppercase text-text-secondary">Email Address</label>
+                        <input
+                          type="email"
+                          value={editingItem.email || ""}
+                          onChange={(e) => setEditingItem({ ...editingItem, email: e.target.value })}
+                          placeholder="name@email.com"
+                          className="w-full px-3 py-2 bg-card-bg border border-card-border rounded-lg text-xs text-text-primary focus:outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-mono uppercase text-text-secondary">Achievements / Legacies (Comma separated)</label>
+                      <textarea
+                        value={Array.isArray(editingItem.achievements) ? editingItem.achievements.join(", ") : editingItem.achievements || ""}
+                        onChange={(e) => setEditingItem({ ...editingItem, achievements: e.target.value.split(",").map(a => a.trim()) })}
+                        placeholder="e.g. Scored 10 CGPA, Designed optical sensor node"
+                        className="w-full px-3 py-2 bg-card-bg border border-card-border rounded-lg text-xs text-text-primary focus:outline-none h-16 resize-none"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5 pt-2">
+                      <label className="text-[10px] font-mono uppercase text-text-secondary">Approval Status</label>
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          id="admin-alumni-approved"
+                          checked={editingItem.approved !== false}
+                          onChange={(e) => setEditingItem({ ...editingItem, approved: e.target.checked })}
+                          className="rounded bg-card-bg border-card-border text-primary-accent focus:ring-primary-accent h-4 w-4"
+                        />
+                        <label htmlFor="admin-alumni-approved" className="text-xs text-text-primary cursor-pointer font-mono select-none">
+                          {editingItem.approved !== false ? "Approved & Visible on Directory" : "Pending Moderation (Hidden)"}
+                        </label>
                       </div>
                     </div>
                   </>
