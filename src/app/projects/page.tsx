@@ -196,6 +196,7 @@ export default function Projects() {
                 
                 {/* Close Button */}
                 <button
+                  suppressHydrationWarning
                   onClick={() => setActiveProject(null)}
                   className="absolute right-4 top-4 p-2 rounded-lg bg-card-bg border border-card-border text-text-secondary hover:text-text-primary hover:bg-card-bg-hover transition-colors"
                 >

@@ -527,6 +527,7 @@ Mascot Status: Online
                     const Icon = tab.icon;
                     return (
                       <button
+                        suppressHydrationWarning
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
                         className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-mono uppercase tracking-wider transition-colors ${
@@ -552,6 +553,7 @@ Mascot Status: Online
                 </div>
 
                 <button
+                  suppressHydrationWarning
                   onClick={handleLogout}
                   className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-xs font-mono uppercase tracking-wider text-rose-400 hover:text-text-primary hover:bg-rose-500/10 transition-colors border border-rose-500/10 mt-4"
                 >

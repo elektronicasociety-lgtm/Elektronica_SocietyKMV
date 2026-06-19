@@ -67,6 +67,7 @@ export default function Gallery() {
           <div className="flex flex-wrap items-center justify-center gap-2 max-w-4xl mx-auto mb-12">
             {CATEGORIES.map((cat) => (
               <button
+                suppressHydrationWarning
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
                 className={`px-4 py-2 rounded-lg font-mono text-[10px] uppercase tracking-wider transition-all duration-300 ${
@@ -132,6 +133,7 @@ export default function Gallery() {
             >
               {/* Close Button */}
               <button
+                suppressHydrationWarning
                 onClick={() => setLightboxImage(null)}
                 className="absolute right-4 top-4 p-2 rounded-lg bg-card-bg border border-card-border text-text-secondary hover:text-text-primary hover:bg-card-bg-hover transition-colors cursor-pointer"
               >

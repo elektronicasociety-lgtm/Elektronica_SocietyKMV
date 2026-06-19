@@ -60,6 +60,7 @@ export default function Achievements() {
           {/* Year Filter Tabs */}
           <div className="flex flex-wrap items-center justify-center gap-2 max-w-4xl mx-auto mb-12">
             <button
+              suppressHydrationWarning
               onClick={() => setSelectedYear("all")}
               className={`px-4 py-2 rounded-lg font-mono text-[10px] uppercase tracking-wider transition-all duration-300 ${
                 selectedYear === "all"
@@ -71,6 +72,7 @@ export default function Achievements() {
             </button>
             {years.map((year) => (
               <button
+                suppressHydrationWarning
                 key={year}
                 onClick={() => setSelectedYear(year)}
                 className={`px-4 py-2 rounded-lg font-mono text-[10px] uppercase tracking-wider transition-all duration-300 ${

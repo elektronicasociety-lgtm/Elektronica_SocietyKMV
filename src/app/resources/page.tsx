@@ -122,6 +122,7 @@ export default function Resources() {
             <div className="lg:col-span-4 flex flex-wrap gap-2 justify-center lg:justify-end">
               {CATEGORIES.map((cat) => (
                 <button
+                  suppressHydrationWarning
                   key={cat.id}
                   onClick={() => setSelectedCategory(cat.id)}
                   className={`px-3 py-1.5 rounded-lg font-mono text-[9px] uppercase tracking-wider transition-all ${
