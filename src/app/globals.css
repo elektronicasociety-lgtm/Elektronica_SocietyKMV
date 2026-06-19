@@ -1,0 +1,131 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary-accent: var(--primary-accent);
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-card-bg: var(--card-bg);
+  --color-card-bg-hover: var(--card-bg-hover);
+  --color-card-border: var(--card-border);
+  
+  --font-display: var(--font-display);
+}
+
+:root {
+  --primary-accent: #D7FF00; /* Cyber-neon yellow-green */
+  --bg-primary: #050505;
+  --bg-secondary: #101010;
+  --text-primary: #FFFFFF;
+  --text-secondary: #B0B0B0;
+  --card-bg: rgba(255, 255, 255, 0.05);
+  --card-bg-hover: rgba(255, 255, 255, 0.08);
+  --card-border: rgba(255, 255, 255, 0.06);
+  --primary-accent-glow: rgba(215, 255, 0, 0.15);
+  --primary-accent-border: rgba(215, 255, 0, 0.3);
+  --background: #050505;
+  --foreground: #FFFFFF;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-geist-sans), sans-serif;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Glassmorphism custom classes */
+.glass-panel {
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--card-border);
+}
+
+.glass-panel-hover {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-panel-hover:hover {
+  background: var(--card-bg-hover);
+  border-color: var(--primary-accent-border);
+  box-shadow: 0 0 40px var(--primary-accent-glow);
+  transform: translateY(-2px);
+}
+
+/* Neon text & glow effects */
+.text-neon {
+  color: var(--primary-accent);
+  text-shadow: 0 0 10px var(--primary-accent-border), 0 0 25px var(--primary-accent-glow);
+}
+
+.glow-accent {
+  box-shadow: 0 0 25px var(--primary-accent-glow);
+}
+
+.glow-accent-hover {
+  transition: all 0.3s ease;
+}
+
+.glow-accent-hover:hover {
+  box-shadow: 0 0 35px var(--primary-accent-glow);
+  border-color: var(--primary-accent);
+}
+
+/* Scrollbar Customization */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #050505;
+}
+::-webkit-scrollbar-thumb {
+  background: #1c1c1c;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #D7FF00;
+  box-shadow: 0 0 10px #D7FF00;
+}
+
+/* Custom PCB and Grid Animations */
+@keyframes circuit-flow {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 100%;
+  }
+}
+
+.pcb-grid {
+  background-size: 50px 50px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+}
+
+/* Custom border highlight animation */
+@keyframes border-pulse {
+  0%, 100% {
+    border-color: rgba(215, 255, 0, 0.1);
+  }
+  50% {
+    border-color: rgba(215, 255, 0, 0.6);
+  }
+}
+
+.border-pulsing {
+  animation: border-pulse 4s infinite ease-in-out;
+}
+
+/* Map Iframe Theme Adaptations */
+.map-iframe {
+  border: 0;
+  filter: invert(90%) hue-rotate(180deg) contrast(120%) brightness(90%);
+  transition: all 0.3s ease;
+}
