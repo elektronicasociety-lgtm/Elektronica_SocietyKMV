@@ -25,7 +25,26 @@ export default function Alumni() {
   const [formLinkedIn, setFormLinkedIn] = useState("");
   const [formEmail, setFormEmail] = useState("");
   const [formAchievements, setFormAchievements] = useState("");
+  const [formPhotoUrl, setFormPhotoUrl] = useState("");
   const [formSuccess, setFormSuccess] = useState(false);
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      alert("Image size exceeds 2MB limit. Please choose a smaller file.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      if (typeof reader.result === "string") {
+        setFormPhotoUrl(reader.result);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
 
   useEffect(() => {
     async function loadData() {
@@ -65,7 +84,7 @@ export default function Alumni() {
       currentRole: formRole || "Consultant",
       linkedIn: formLinkedIn,
       email: formEmail,
-      photoUrl: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=300&auto=format&fit=crop", // placeholder profile
+      photoUrl: formPhotoUrl || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=300&auto=format&fit=crop",
       achievements: formAchievements ? formAchievements.split(",").map(a => a.trim()) : [],
     };
 
@@ -81,6 +100,7 @@ export default function Alumni() {
       setFormLinkedIn("");
       setFormEmail("");
       setFormAchievements("");
+      setFormPhotoUrl("");
       setTimeout(() => {
         setFormSuccess(false);
         setRegisterModalOpen(false);
@@ -310,6 +330,52 @@ export default function Alumni() {
                             className="w-full px-3 py-2 bg-card-bg border border-card-border rounded-lg text-xs text-text-primary placeholder-text-secondary/40 focus:outline-none focus:border-primary-accent"
                           />
                         </div>
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-mono uppercase text-text-secondary block">Profile Photo (File Upload or URL)</label>
+                        <div className="flex items-center space-x-4">
+                          {formPhotoUrl ? (
+                            <div className="w-12 h-12 rounded-lg overflow-hidden border border-card-border bg-card-bg shrink-0 relative group">
+                              <img src={formPhotoUrl} alt="Preview" className="w-full h-full object-cover" />
+                              <button
+                                suppressHydrationWarning
+                                type="button"
+                                onClick={() => setFormPhotoUrl("")}
+                                className="absolute inset-0 bg-black/75 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-rose-400 text-[8px] font-mono uppercase font-bold"
+                              >
+                                Clear
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="w-12 h-12 rounded-lg border border-dashed border-card-border bg-card-bg flex items-center justify-center text-text-secondary text-[8px] shrink-0 font-mono text-center">
+                              No image
+                            </div>
+                          )}
+                          <div className="flex-grow space-y-1.5 text-left">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={handlePhotoUpload}
+                              className="hidden"
+                              id="alumni-photo-upload"
+                            />
+                            <label
+                              htmlFor="alumni-photo-upload"
+                              className="inline-flex items-center px-2.5 py-1.5 bg-card-bg border border-card-border rounded-lg text-[10px] text-text-primary hover:bg-card-bg-hover cursor-pointer transition-colors font-mono"
+                            >
+                              Choose Image File
+                            </label>
+                            <span className="text-[8px] text-text-secondary font-mono ml-2">Max 2MB</span>
+                          </div>
+                        </div>
+                        <input
+                          type="text"
+                          value={formPhotoUrl}
+                          onChange={(e) => setFormPhotoUrl(e.target.value)}
+                          placeholder="Or paste direct image URL / Google Drive link"
+                          className="w-full px-3 py-2 bg-card-bg border border-card-border rounded-lg text-xs text-text-primary placeholder-text-secondary/40 focus:outline-none focus:border-primary-accent"
+                        />
                       </div>
 
                       <div className="space-y-1.5">
