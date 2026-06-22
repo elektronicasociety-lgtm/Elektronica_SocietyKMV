@@ -10,10 +10,85 @@ import InteractiveMascot from "@/components/mascot/InteractiveMascot";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { ArrowUpRight, Cpu, HardDrive, ShieldCheck, Award, Users, Settings } from "lucide-react";
+import { fetchProjects, fetchEvents, fetchAlumni, fetchSessions } from "@/lib/firebase";
 
 export default function Home() {
   const [showSplash, setShowSplash] = useState(true);
   const [diagnostics, setDiagnostics] = useState("INITIALIZING COMPONENT MATRIX...");
+
+  const [stats, setStats] = useState({
+    activeMembers: 60,
+    totalProjects: 45,
+    technicalEvents: 30,
+    alumniNetwork: 200,
+  });
+  const [statsLoading, setStatsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadStats() {
+      try {
+        const [p, e, al, s] = await Promise.all([
+          fetchProjects(),
+          fetchEvents(),
+          fetchAlumni(),
+          fetchSessions(),
+        ]);
+
+        const latestSession = s.sort((a, b) => b.startYear - a.startYear)[0];
+
+        let activeCount = 0;
+        if (latestSession) {
+          const names = new Set<string>();
+          const addLeader = (leader: any) => {
+            if (leader && leader.name) names.add(leader.name);
+          };
+
+          addLeader(latestSession.president);
+          addLeader(latestSession.vicePresident);
+          addLeader(latestSession.secretary);
+          addLeader(latestSession.jointSecretary);
+          addLeader(latestSession.treasurer);
+          addLeader(latestSession.contentHead);
+          addLeader(latestSession.contentCoHead);
+
+          if (Array.isArray(latestSession.roboticsHeads)) {
+            latestSession.roboticsHeads.forEach(addLeader);
+          }
+          if (Array.isArray(latestSession.roboticsCoHeads)) {
+            latestSession.roboticsCoHeads.forEach(addLeader);
+          }
+          if (Array.isArray(latestSession.seniorExecutives)) {
+            latestSession.seniorExecutives.forEach(addLeader);
+          }
+          if (Array.isArray(latestSession.juniorExecutives)) {
+            latestSession.juniorExecutives.forEach(addLeader);
+          }
+          if (Array.isArray(latestSession.coreTeam)) {
+            latestSession.coreTeam.forEach(addLeader);
+          }
+          if (Array.isArray(latestSession.members)) {
+            latestSession.members.forEach((m: any) => {
+              if (typeof m === "string") names.add(m);
+              else if (m && m.name) names.add(m.name);
+            });
+          }
+          activeCount = names.size;
+        }
+
+        setStats({
+          activeMembers: activeCount || 60,
+          totalProjects: p.length || 45,
+          technicalEvents: e.length || 30,
+          alumniNetwork: al.length || 200,
+        });
+      } catch (err) {
+        console.error("Failed to load real stats:", err);
+      } finally {
+        setStatsLoading(false);
+      }
+    }
+    loadStats();
+  }, []);
 
   useEffect(() => {
     // Check if splash has already run in this session
@@ -292,10 +367,10 @@ export default function Home() {
           {/* 2. STATS OVERVIEW PANEL (Tesla styled) */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-24">
             {[
-              { label: "Active Members", value: "60+", icon: Users },
-              { label: "Total Projects", value: "45+", icon: Cpu },
-              { label: "Technical Events", value: "30+", icon: Settings },
-              { label: "Alumni Network", value: "200+", icon: HardDrive },
+              { label: "Active Members", value: statsLoading ? "60+" : `${stats.activeMembers}+`, icon: Users },
+              { label: "Total Projects", value: statsLoading ? "45+" : `${stats.totalProjects}+`, icon: Cpu },
+              { label: "Technical Events", value: statsLoading ? "30+" : `${stats.technicalEvents}+`, icon: Settings },
+              { label: "Alumni Network", value: statsLoading ? "200+" : `${stats.alumniNetwork}+`, icon: HardDrive },
             ].map((stat, i) => {
               const Icon = stat.icon;
               return (
